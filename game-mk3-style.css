@@ -1,0 +1,151 @@
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    background-color: #f0f0f0;
+    height: 100vh;
+    overflow: hidden;
+}
+
+.game-container {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+#game {
+    width: 100%;
+    height: 100%;
+    background-color: #87CEEB;
+    position: relative;
+    overflow: hidden;
+}
+
+#bird {
+    width: 40px;
+    height: 30px;
+    background-color: #FFD700;
+    position: absolute;
+    border-radius: 50% 50% 50% 50% / 60% 60% 40% 40%;
+    left: 100px;
+    top: 50%;
+}
+
+.pipe {
+    width: 60px;
+    background-color: #2ECC40;
+    position: absolute;
+}
+
+.start-btn-container {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 10;
+}
+
+#start-btn {
+    padding: 12px 25px;
+    font-size: 18px;
+    cursor: pointer;
+    border: none;
+    border-radius: 25px;
+    background-color: #4CAF50;
+    color: white;
+    transition: all 0.3s;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+}
+
+#start-btn:hover {
+    background-color: #45a049;
+    transform: scale(1.1);
+}
+
+.game-controls {
+    position: fixed;
+    bottom: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    gap: 10px;
+    align-items: center;
+    background-color: rgba(255, 255, 255, 0.7);
+    padding: 10px 15px;
+    border-radius: 20px;
+    z-index: 10;
+}
+
+.game-controls button {
+    padding: 8px 15px;
+    font-size: 14px;
+    cursor: pointer;
+    border: none;
+    border-radius: 15px;
+    background-color: #2196F3;
+    color: white;
+    transition: all 0.3s;
+}
+
+.game-controls button:hover {
+    background-color: #0b7dda;
+    transform: scale(1.05);
+}
+
+#score {
+    font-size: 20px;
+    font-weight: bold;
+    margin-left: 10px;
+    color: #333;
+}
+
+.leaderboard {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    background-color: rgba(255, 255, 255, 0.9);
+    padding: 15px;
+    border-radius: 10px;
+    box-shadow: 0 0 15px rgba(0,0,0,0.2);
+    z-index: 100;
+    max-width: 200px;
+    display: none;
+}
+
+.leaderboard h2 {
+    margin-top: 0;
+    margin-bottom: 10px;
+    color: #333;
+    text-align: center;
+}
+
+#high-scores {
+    text-align: left;
+    padding-left: 20px;
+    margin-bottom: 10px;
+}
+
+#high-scores li {
+    margin-bottom: 5px;
+    color: #555;
+}
+
+#close-leaderboard {
+    padding: 5px 10px;
+    font-size: 12px;
+    cursor: pointer;
+    background-color: #f44336;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    display: block;
+    margin: 0 auto;
+}
+
+#close-leaderboard:hover {
+    background-color: #d32f2f;
+}

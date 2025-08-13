@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Flappy Bird</title>
+    <link rel="stylesheet" href="game-mk3-style.css">
+</head>
+<body>
+    <div class="game-container" id="game-container">
+        <div id="game"></div>
+        
+        <div class="start-btn-container">
+            <button id="start-btn">Start Game</button>
+        </div>
+        
+        <div class="game-controls">
+            <button id="fullscreen-btn">Fullscreen</button>
+            <button id="leaderboard-btn">Show Leaderboard</button>
+            <div id="score">Score: 0</div>
+        </div>
+        
+        <div class="leaderboard" id="leaderboard">
+            <h2>Leaderboard</h2>
+            <ol id="high-scores"></ol>
+            <button id="close-leaderboard">Close</button>
+        </div>
+    </div>
+    <script src="game-mk3-java.js"></script>
+</body>
+</html>
