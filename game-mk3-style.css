@@ -27,6 +27,46 @@ body {
     overflow: hidden;
 }
 
+/* Existing styles... */
+
+.game-controls {
+    position: fixed;
+    bottom: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    gap: 10px;
+    align-items: center;
+    background-color: rgba(255, 255, 255, 0.7);
+    padding: 10px 15px;
+    border-radius: 20px;
+    z-index: 10;
+}
+
+.game-controls button {
+    padding: 8px 15px;
+    font-size: 14px;
+    cursor: pointer;
+    border: none;
+    border-radius: 15px;
+    background-color: #2196F3;
+    color: white;
+    transition: all 0.3s;
+}
+
+.game-controls button:hover {
+    background-color: #0b7dda;
+    transform: scale(1.05);
+}
+
+#sound-toggle {
+    background-color: #666;
+}
+
+#sound-toggle:hover {
+    background-color: #555;
+}
+
 #bird {
     width: 50px;
     height: 40px;

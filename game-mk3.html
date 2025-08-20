@@ -17,6 +17,7 @@
         <div class="game-controls">
             <button id="fullscreen-btn">Fullscreen</button>
             <button id="leaderboard-btn">Show Leaderboard</button>
+            <button id="sound-toggle">🔇 Sound Off</button>
             <div id="score">Score: 0</div>
         </div>
         
@@ -25,6 +26,20 @@
             <ol id="high-scores"></ol>
             <button id="close-leaderboard">Close</button>
         </div>
+        
+        <!-- Audio elements -->
+        <audio id="bg-music" loop>
+            <source src="background-music.mp3" type="audio/mpeg">
+        </audio>
+        <audio id="jump-sound">
+            <source src="myinstants.mp3" type="audio/mpeg">
+        </audio>
+        <audio id="score-sound">
+            <source src="myinstants2.mp3" type="audio/mpeg">
+        </audio>
+        <audio id="hit-sound">
+            <source src="myinstants3.mp3" type="audio/mpeg">
+        </audio>
     </div>
     <script src="game-mk3-java.js"></script>
 </body>
