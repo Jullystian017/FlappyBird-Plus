@@ -20,25 +20,37 @@ body {
 #game {
     width: 100%;
     height: 100%;
-    background-color: #87CEEB;
+    background-image: url('background.webp');
+    background-size: cover;
+    background-position: center;
     position: relative;
     overflow: hidden;
 }
 
 #bird {
-    width: 40px;
-    height: 30px;
-    background-color: #FFD700;
+    width: 50px;
+    height: 40px;
     position: absolute;
-    border-radius: 50% 50% 50% 50% / 60% 60% 40% 40%;
     left: 100px;
     top: 50%;
+    background-image: url('bird.webp');
+    background-size: contain;
+    background-repeat: no-repeat;
+    transition: transform 0.1s;
+    z-index: 10;
 }
 
 .pipe {
-    width: 60px;
-    background-color: #2ECC40;
+    width: 70px;
     position: absolute;
+    background-image: url('tembok.webp');
+    background-size: 100% auto;
+    background-repeat: repeat-y;
+    background-position: center top;
+}
+
+.pipe-top {
+    transform: rotate(180deg);
 }
 
 .start-btn-container {
@@ -148,4 +160,19 @@ body {
 
 #close-leaderboard:hover {
     background-color: #d32f2f;
+}
+
+.game-over-message {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    font-size: 60px;
+    font-weight: bold;
+    color: red;
+    text-shadow: 3px 3px 5px rgba(0,0,0,0.5);
+    white-space: nowrap;
+    z-index: 1000;
+    opacity: 0;
+    transition: opacity 0.3s ease-in-out;
 }

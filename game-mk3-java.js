@@ -19,8 +19,20 @@ const startButtonContainer = document.querySelector('.start-btn-container');
 const highScoresList = document.getElementById('high-scores');
 const leaderboardElement = document.getElementById('leaderboard');
 
+// Preload images for better performance
+function preloadImages() {
+    const imageUrls = ['bird.webp', 'background.webp', 'tembok.webp'];
+    imageUrls.forEach(url => {
+        const img = new Image();
+        img.src = url;
+    });
+}
+
 // Initialize game
 function initGame() {
+    // Preload images
+    preloadImages();
+    
     // Create bird
     bird = document.createElement('div');
     bird.id = 'bird';
@@ -36,6 +48,9 @@ function initGame() {
     document.getElementById('leaderboard-btn').addEventListener('click', showLeaderboard);
     document.getElementById('close-leaderboard').addEventListener('click', hideLeaderboard);
     
+    // Add touch support for mobile devices
+    document.addEventListener('touchstart', handleTouch);
+    
     // Position bird initially
     resetBirdPosition();
 }
@@ -49,7 +64,25 @@ function resetBirdPosition() {
 function handleKeyPress(e) {
     if ((e.code === 'Space' || e.key === ' ' || e.key === 'ArrowUp') && gameStarted) {
         birdVelocity = jumpForce;
+        animateBirdJump();
     }
+}
+
+// Handle touch input
+function handleTouch(e) {
+    if (gameStarted) {
+        birdVelocity = jumpForce;
+        animateBirdJump();
+        e.preventDefault(); // Prevent default touch behavior
+    }
+}
+
+// Animate bird when jumping
+function animateBirdJump() {
+    bird.style.transform = 'rotate(-25deg)';
+    setTimeout(() => {
+        bird.style.transform = 'rotate(0deg)';
+    }, 200);
 }
 
 // Start game
@@ -82,6 +115,9 @@ function gameLoop() {
     const newTop = currentTop + birdVelocity;
     bird.style.top = `${newTop}px`;
     
+    // Rotate bird based on velocity
+    bird.style.transform = `rotate(${birdVelocity * 2}deg)`;
+    
     // Check for collisions with ground or ceiling
     if (newTop <= 0 || newTop >= gameContainer.offsetHeight - bird.offsetHeight) {
         gameOver();
@@ -109,11 +145,10 @@ function createPipe() {
     
     // Top pipe
     const topPipe = document.createElement('div');
-    topPipe.className = 'pipe';
+    topPipe.className = 'pipe pipe-top';
     topPipe.style.height = `${pipeHeight}px`;
     topPipe.style.top = '0';
     topPipe.style.left = `${gameContainer.offsetWidth}px`;
-    topPipe.style.transform = 'rotate(180deg)'; // Flip the top pipe
     gameContainer.appendChild(topPipe);
     
     // Bottom pipe
@@ -138,6 +173,7 @@ function createPipe() {
         passed: false
     });
 }
+
 // Move all pipes
 function movePipes() {
     for (let i = 0; i < pipes.length; i++) {
@@ -189,18 +225,7 @@ function gameOver() {
     // Create and style the Game Over message
     const gameOverMsg = document.createElement('div');
     gameOverMsg.textContent = 'GAME OVER!';
-    gameOverMsg.style.position = 'fixed';
-    gameOverMsg.style.top = '50%';
-    gameOverMsg.style.left = '50%';
-    gameOverMsg.style.transform = 'translate(-50%, -50%)';
-    gameOverMsg.style.fontSize = '100px';
-    gameOverMsg.style.fontWeight = 'bold';
-    gameOverMsg.style.color = 'red';
-    gameOverMsg.style.textShadow = '3px 3px 5px rgba(0,0,0,0.5)';
-    gameOverMsg.style.whiteSpace = 'nowrap'; // Ensure single line
-    gameOverMsg.style.zIndex = '1000';
-    gameOverMsg.style.opacity = '0';
-    gameOverMsg.style.transition = 'opacity 0.3s ease-in-out';
+    gameOverMsg.classList.add('game-over-message');
     
     document.body.appendChild(gameOverMsg);
     
@@ -217,15 +242,12 @@ function gameOver() {
         }, 300);
     }, 1500);
     
-    
     // Show start button again
     startButtonContainer.style.display = 'block';
     
     saveScore(score);
     loadHighScores();
 }
-
-// [Rest of the code remains the same]
 
 // Save score to local storage
 function saveScore(score) {
