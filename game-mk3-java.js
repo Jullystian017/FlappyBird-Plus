@@ -9,8 +9,8 @@ let gameStarted = false;
 let gravity = 0.5;
 let jumpForce = -10;
 let birdVelocity = 0;
-let minVerticalGap = 150;
-let maxVerticalGap = 180;
+let minVerticalGap = 170;
+let maxVerticalGap = 190;
 let horizontalGap = 250 + Math.random() * 40; // Random 250–290
 
 // DOM Elements
