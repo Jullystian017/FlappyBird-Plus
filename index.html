@@ -1,46 +1,101 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="id">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Flappy Bird</title>
     <link rel="stylesheet" href="style.css">
+    <title>Flappy Bird</title>
 </head>
 <body>
-    <div class="game-container" id="game-container">
-        <div id="game"></div>
+    <div id="game-container">
+        <canvas id="game-canvas"></canvas>
         
-        <div class="start-btn-container">
-            <button id="start-btn">Start Game</button>
+        <div id="main-menu" class="screen">
+            <h1 class="title">FLAPPY BIRD</h1>
+            <div class="controls-info">
+                Controls: SPACE or CLICK to flap<br>
+                SLOW MODE - Easy to play!
+            </div>
+            <button id="start-btn" class="btn">START GAME</button>
+            <button id="skin-btn" class="btn">SELECT BIRD SKIN</button>
+            <button id="leaderboard-btn" class="btn">LEADERBOARD</button>
+            <button id="achievements-btn" class="btn">ACHIEVEMENTS</button>
+            <button id="settings-btn" class="btn">SETTINGS</button>
         </div>
         
-        <div class="game-controls">
-            <button id="fullscreen-btn">Fullscreen</button>
-            <button id="leaderboard-btn">Show Leaderboard</button>
-            <button id="sound-toggle">🔇 Sound Off</button>
-            <div id="score">Score: 0</div>
+        <div id="name-input-screen" class="screen hidden">
+            <h2 class="title">ENTER YOUR NAME</h2>
+            <input type="text" id="player-name" maxlength="12" value="Player">
+            <button id="play-btn" class="btn">PLAY</button>
         </div>
         
-        <div class="leaderboard" id="leaderboard">
-            <h2>Leaderboard</h2>
-            <ol id="high-scores"></ol>
-            <button id="close-leaderboard">Close</button>
+        <div id="skin-selection" class="screen hidden">
+            <h2 class="title">SELECT BIRD SKIN</h2>
+            <div class="bird-selection">
+                <div class="bird-option yellow selected" data-skin="yellow">🐤</div>
+                <div class="bird-option red" data-skin="red">🐤</div>
+                <div class="bird-option blue" data-skin="blue">🐤</div>
+                <div class="bird-option black" data-skin="black">🐤</div>
+            </div>
+            <button id="skin-back-btn" class="btn">BACK</button>
         </div>
         
-        <!-- Audio elements -->
-        <audio id="bg-music" loop>
-            <source src="background-music.mp3" type="audio/mpeg">
-        </audio>
-        <audio id="jump-sound">
-            <source src="myinstants.mp3" type="audio/mpeg">
-        </audio>
-        <audio id="score-sound">
-            <source src="myinstants2.mp3" type="audio/mpeg">
-        </audio>
-        <audio id="hit-sound">
-            <source src="myinstants3.mp3" type="audio/mpeg">
-        </audio>
+        <div id="leaderboard" class="screen hidden">
+            <h2 class="title">LEADERBOARD</h2>
+            <ul id="leaderboard-list" class="leaderboard-list"></ul>
+            <button id="leaderboard-back-btn" class="btn">BACK</button>
+        </div>
+        
+        <div id="achievements" class="screen hidden">
+            <h2 class="title">ACHIEVEMENTS</h2>
+            <div id="achievement-list" class="achievement-list"></div>
+            <button id="achievements-back-btn" class="btn">BACK</button>
+        </div>
+        
+        <div id="settings" class="screen hidden">
+            <h2 class="title">SETTINGS</h2>
+            <div class="settings-option">
+                <input type="checkbox" id="sound-toggle" checked>
+                <label for="sound-toggle">SOUND EFFECTS</label>
+            </div>
+            <div class="settings-option">
+                <input type="checkbox" id="music-toggle" checked>
+                <label for="music-toggle">BACKGROUND MUSIC</label>
+            </div>
+            <div class="settings-option">
+                <input type="checkbox" id="difficulty-toggle">
+                <label for="difficulty-toggle">HARD MODE (Faster progression)</label>
+            </div>
+            <button id="settings-back-btn" class="btn">BACK</button>
+        </div>
+        
+        <div id="game-over" class="screen hidden">
+            <h2 class="title">GAME OVER</h2>
+            <p id="final-score" class="score-display">SCORE: 0</p>
+            <p id="high-score">HIGH SCORE: 0</p>
+            <button id="try-again-btn" class="btn">TRY AGAIN</button>
+            <button id="menu-btn" class="btn btn-secondary">BACK TO MENU</button>
+        </div>
+        
+        <!-- Menu In-Game (Pause) -->
+        <div id="pause-menu" class="screen hidden">
+            <h2 class="title">GAME PAUSED</h2>
+            <button id="resume-btn" class="btn">RESUME GAME</button>
+            <button id="sound-toggle-btn" class="btn">SOUND: ON</button>
+            <button id="music-toggle-btn" class="btn">MUSIC: ON</button>
+            <button id="main-menu-btn" class="btn btn-secondary">MAIN MENU</button>
+        </div>
+        
+        <button id="pause-btn" class="hidden">❚❚</button>
+        <button id="fullscreen-btn">⛶</button>
+        
+        <!-- Audio Elements -->
+        <audio id="flap-sound" src="myinstants.mp3" preload="auto"></audio>
+        <audio id="point-sound" src="myinstants2.mp3" preload="auto"></audio>
+        <audio id="hit-sound" src="myinstants3.mp3" preload="auto"></audio>
+        <audio id="bg-music" src="background-music.mp3" preload="auto" loop></audio>
     </div>
+
     <script src="script.js"></script>
 </body>
 </html>
