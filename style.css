@@ -151,6 +151,60 @@
             transform: scale(1.15);
             box-shadow: 0 0 15px rgba(241, 196, 15, 0.7);
         }
+        /* Gold */
+        .bird-option.gold {
+        background: linear-gradient(145deg, gold, #f9e79f);
+        color: #fff;
+        font-size: 30px;
+        }
+
+        /* Rainbow */
+        .bird-option.rainbow {
+        background: linear-gradient(135deg, red, orange, yellow, green, blue, indigo, violet);
+        color: #fff;
+        font-size: 30px;
+        }
+
+        /* Obsidian */
+        .bird-option.obsidian {
+        background: linear-gradient(145deg, #0a0a0a, #2c2c2c);
+        color: #e0e0e0;
+        font-size: 30px;
+        }
+
+        /* Legendary (paling langka) */
+        .bird-option.legendary {
+        background: linear-gradient(135deg, gold, crimson, purple, cyan);
+        color: #fff;
+        font-size: 32px;
+        animation: legendary-glow 2s infinite alternate;
+        }
+
+        .bird-option.locked {
+        opacity: 0.4;
+        filter: grayscale(70%);
+        cursor: not-allowed;
+        position: relative;
+        }
+
+        .bird-option .lock {
+        position: absolute;
+        bottom: 6px;
+        right: 8px;
+        font-size: 14px;
+        color: #fff;
+        background: rgba(0,0,0,0.6);
+        padding: 2px 6px;
+        border-radius: 6px;
+        }
+
+
+        /* Animasi glow untuk legendary */
+        @keyframes legendary-glow {
+        from { box-shadow: 0 0 15px rgba(255, 215, 0, 0.6); }
+        to   { box-shadow: 0 0 30px rgba(255, 0, 255, 0.9); }
+        }
+
         
         .leaderboard-list {
             list-style: none;

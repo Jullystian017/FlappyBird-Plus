@@ -569,19 +569,80 @@
             
             // Warna burung berdasarkan skin yang dipilih
             let birdColor;
-            switch (selectedBirdSkin) {
-                case 'red':
-                    birdColor = '#e74c3c';
-                    break;
-                case 'blue':
-                    birdColor = '#3498db';
-                    break;
-                case 'black':
-                    birdColor = '#2c3e50';
-                    break;
-                default:
-                    birdColor = '#f1c40f';
-            }
+        switch (selectedBirdSkin) {
+        case 'red':
+            birdColor = '#e74c3c';
+            break;
+        case 'blue':
+            birdColor = '#3498db';
+            break;
+        case 'black':
+            birdColor = '#2c3e50';
+            break;
+        case 'gold':
+        // bikin gradient horizontal yang bergeser setiap frame
+        const offset = (frames % 200) / 200; // geser terus dari 0 → 1
+        const goldGradient = ctx.createLinearGradient(-30 + offset * 60, -20, 30 + offset * 60, 20);
+        goldGradient.addColorStop(0, '#b8860b');   // dark gold
+        goldGradient.addColorStop(0.3, '#ffd700'); // shiny gold
+        goldGradient.addColorStop(0.6, '#fffacd'); // light gold highlight
+        goldGradient.addColorStop(1, '#ffd700');   // shiny gold
+        birdColor = goldGradient;
+        break;
+
+        case 'rainbow':
+        // Gradient pelangi bergerak (shimmer)
+        const rainbowOffset = (frames % 300) / 300; 
+        const rainbowGradient = ctx.createLinearGradient(-30 + rainbowOffset * 60, -20, 30 + rainbowOffset * 60, 20);
+        rainbowGradient.addColorStop(0, 'red');
+        rainbowGradient.addColorStop(0.16, 'orange');
+        rainbowGradient.addColorStop(0.33, 'yellow');
+        rainbowGradient.addColorStop(0.5, 'green');
+        rainbowGradient.addColorStop(0.66, 'blue');
+        rainbowGradient.addColorStop(0.83, 'indigo');
+        rainbowGradient.addColorStop(1, 'violet');
+        birdColor = rainbowGradient;
+
+        // Tambahkan efek glow pelangi di sekitar burung
+        ctx.shadowColor = 'rgba(255, 255, 255, 0.8)';
+        ctx.shadowBlur = 20;
+        break;
+
+        case 'obsidian':
+        // Warna dasar hitam dengan shimmer ungu
+        const obsidianOffset = (frames % 250) / 250;
+        const obsidianGradient = ctx.createLinearGradient(-30 + obsidianOffset * 60, -20, 30 + obsidianOffset * 60, 20);
+        obsidianGradient.addColorStop(0, '#0a0a0a');
+        obsidianGradient.addColorStop(0.5, '#2c2c2c');
+        obsidianGradient.addColorStop(0.8, '#6a0dad'); // shimmer ungu
+        obsidianGradient.addColorStop(1, '#0a0a0a');
+        birdColor = obsidianGradient;
+
+        // Glow misterius
+        ctx.shadowColor = 'rgba(138, 43, 226, 0.8)'; // ungu kebiruan
+        ctx.shadowBlur = 25;
+        break;
+
+        case 'legendary':
+        // Gradient eksklusif berkilau (emas → merah → ungu → cyan)
+        const legendaryOffset = (frames % 400) / 400;
+        const legendaryGradient = ctx.createLinearGradient(-40 + legendaryOffset * 80, -25, 40 + legendaryOffset * 80, 25);
+        legendaryGradient.addColorStop(0, 'gold');
+        legendaryGradient.addColorStop(0.25, 'crimson');
+        legendaryGradient.addColorStop(0.5, 'purple');
+        legendaryGradient.addColorStop(0.75, 'cyan');
+        legendaryGradient.addColorStop(1, 'gold');
+        birdColor = legendaryGradient;
+
+        // Glow lebih kuat untuk legendary
+        ctx.shadowColor = 'rgba(255, 42, 0, 1)'; // gold glow
+        ctx.shadowBlur = 30;
+        break;
+
+        default:
+            birdColor = '#f1c40f'; // yellow
+        }
+
             
             // Draw body
             ctx.fillStyle = birdColor;
@@ -905,6 +966,113 @@
                 updatePauseMenuButtons();
             }
         }
+                // ========== SKIN SYSTEM ==========
+        // Skin default selalu terbuka
+        let unlockedSkins = ["yellow", "red", "blue", "black"];
+
+        // Syarat skor untuk skin eksklusif
+        const SKIN_UNLOCK_REQUIREMENTS = {
+            gold: 50,
+            rainbow: 70,
+            obsidian: 100,
+            legendary: 150
+        };
+
+        // Muat skin dari localStorage
+        function loadUnlockedSkins() {
+            const saved = localStorage.getItem("unlockedSkins");
+            if (saved) unlockedSkins = JSON.parse(saved);
+        }
+
+        // Simpan skin ke localStorage
+        function saveUnlockedSkins() {
+            localStorage.setItem("unlockedSkins", JSON.stringify(unlockedSkins));
+        }
+
+        // Cek apakah ada skin baru yang terbuka berdasarkan skor
+        function checkSkinUnlocks() {
+            let newlyUnlocked = [];
+            for (const skin in SKIN_UNLOCK_REQUIREMENTS) {
+                if (score >= SKIN_UNLOCK_REQUIREMENTS[skin] && !unlockedSkins.includes(skin)) {
+                    unlockedSkins.push(skin);
+                    newlyUnlocked.push(skin);
+                }
+            }
+            if (newlyUnlocked.length > 0) {
+                saveUnlockedSkins();
+                alert(`🎉 Skin baru terbuka: ${newlyUnlocked.join(", ")}`);
+            }
+        }
+
+        // Render status locked/unlocked di menu skin
+        function renderSkinOptions() {
+            document.querySelectorAll('.bird-option').forEach(option => {
+                const skin = option.getAttribute('data-skin');
+                if (!unlockedSkins.includes(skin)) {
+                    option.classList.add("locked");
+                } else {
+                    option.classList.remove("locked");
+                }
+            });
+        }
+
+        // Tambahkan ke init() yang sudah ada
+        const oldInit = init;
+        init = function() {
+            oldInit();
+            loadUnlockedSkins();
+            renderSkinOptions();
+        };
+
+        // Tambahkan ke gameOver() yang sudah ada
+        const oldGameOver = gameOver;
+        gameOver = function() {
+            oldGameOver();
+            checkSkinUnlocks();
+            renderSkinOptions();
+        };
+
+        // Override listener klik skin (hanya boleh pilih kalau unlocked)
+        document.querySelectorAll('.bird-option').forEach(option => {
+            option.addEventListener('click', () => {
+                const skin = option.getAttribute('data-skin');
+                if (!unlockedSkins.includes(skin)) {
+                    alert("Skin ini masih terkunci 🚫");
+                    return;
+                }
+                document.querySelector('.bird-option.selected')?.classList.remove('selected');
+                option.classList.add('selected');
+                selectedBirdSkin = skin;
+            });
+        });
         
+        function renderSkinOptions() {
+        document.querySelectorAll('.bird-option').forEach(option => {
+            const skin = option.getAttribute('data-skin');
+            const lockSpan = option.querySelector('.lock');
+            
+            if (!unlockedSkins.includes(skin)) {
+            option.classList.add("locked");
+            if (lockSpan) lockSpan.style.display = "inline"; // tampilkan kunci
+            } else {
+            option.classList.remove("locked");
+            if (lockSpan) lockSpan.style.display = "none"; // sembunyikan kunci
+            }
+        });
+        }
+
+        document.querySelectorAll('.bird-option').forEach(option => {
+        option.addEventListener('click', () => {
+            const skin = option.getAttribute('data-skin');
+            if (!unlockedSkins.includes(skin)) {
+            alert("Skin ini masih terkunci 🚫");
+            return;
+            }
+            document.querySelector('.bird-option.selected')?.classList.remove('selected');
+            option.classList.add('selected');
+            selectedBirdSkin = skin;
+        });
+        });
+
         // ========== START GAME ==========
         window.onload = init;
