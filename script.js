@@ -323,13 +323,13 @@
                 bird.y += bird.velocity;
                 
                 // Rotasi bird berdasarkan velocity
-                bird.rotation = bird.velocity * 0.1; // DIPERLAMBAT LAGI dari 0.12
+                bird.rotation = bird.velocity * 0.1; 
                 if (bird.rotation > 0.5) bird.rotation = 0.5;
                 if (bird.rotation < -0.5) bird.rotation = -0.5;
                 
                 // Animasi kepakan sayap
                 bird.flapCounter++;
-                if (bird.flapCounter % 10 === 0) { // DIPERLAMBAT LAGI dari 8
+                if (bird.flapCounter % 10 === 0) { 
                     bird.currentFrame = (bird.currentFrame + 1) % 3;
                 }
                 
@@ -345,7 +345,7 @@
                 }
                 
                 // Update pipa - DIPERLAMBAT LAGI PEMBUATAN PIPA
-                if (frames % 150 === 0) { // DIPERLAMBAT LAGI dari 130
+                if (frames % 150 === 0) { 
                     pipes.push({
                         x: canvas.width,
                         y: 0,
@@ -375,9 +375,9 @@
                         playPointSound();
                         
                         // Tingkatkan kesulitan secara lebih gradual
-                        if (score % 5 === 0) { // DIPERLAMBAT LAGI dari 4
-                            gameSpeed += hardMode ? 0.2 : 0.1; // DIPERLAMBAT LAGI
-                            gapSize = Math.max(220, gapSize - (hardMode ? 2 : 1)); // DIPERLAMBAT LAGI
+                        if (score % 5 === 0) { 
+                            gameSpeed += hardMode ? 0.2 : 0.1; 
+                            gapSize = Math.max(220, gapSize - (hardMode ? 2 : 1)); 
                         }
                     }
                     
@@ -389,7 +389,7 @@
                 }
                 
                 // Update background offset untuk efek paralax
-                backgroundOffset -= gameSpeed * 0.2; // DIPERLAMBAT LAGI dari 0.4
+                backgroundOffset -= gameSpeed * 0.2; 
                 if (backgroundOffset <= -canvas.width) {
                     backgroundOffset = 0;
                 }
@@ -481,7 +481,7 @@
                 ctx.fillStyle = 'white';
                 for (const star of stars) {
                     // Efek berkelap-kelip pada bintang
-                    const opacity = 0.5 + 0.5 * Math.sin(frames * 0.03 + star.id); // DIPERLAMBAT LAGI
+                    const opacity = 0.5 + 0.5 * Math.sin(frames * 0.03 + star.id); 
                     ctx.globalAlpha = opacity;
                     ctx.fillRect(star.x, star.y, 4, 4);
                 }
@@ -532,7 +532,7 @@
             
             // Draw wing (animasi berdasarkan frame)
             ctx.fillStyle = birdColor;
-            const wingHeight = 15 + Math.sin(frames * 0.12) * 10; // DIPERLAMBAT LAGI
+            const wingHeight = 15 + Math.sin(frames * 0.12) * 10; 
             ctx.beginPath();
             ctx.ellipse(-15, 0, 20, wingHeight, 0, 0, Math.PI * 2);
             ctx.fill();
