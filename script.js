@@ -1,4 +1,4 @@
- // ========== KONSTANTA DAN VARIABEL GLOBAL ==========
+        // ========== KONSTANTA DAN VARIABEL GLOBAL ==========
         const canvas = document.getElementById('game-canvas');
         const ctx = canvas.getContext('2d');
         
@@ -12,6 +12,8 @@
         const gameOverScreen = document.getElementById('game-over');
         const pauseMenu = document.getElementById('pause-menu');
         const pauseBtn = document.getElementById('pause-btn');
+        const countdownScreen = document.getElementById('countdown');
+        const countdownText = document.getElementById('countdown-text');
         
         // Elemen audio
         const flapSound = document.getElementById('flap-sound');
@@ -20,7 +22,7 @@
         const bgMusic = document.getElementById('bg-music');
         
         // Variabel game state
-        let gameState = 'menu'; // menu, playing, paused, gameover
+        let gameState = 'menu'; // menu, countdown, playing, paused, gameover
         let playerName = 'Player';
         let selectedBirdSkin = 'yellow';
         let score = 0;
@@ -30,6 +32,8 @@
         let backgroundMode = 'day'; // day or night
         let backgroundOffset = 0;
         let hardMode = false;
+        let countdownValue = 3;
+        let countdownInterval;
         
         // Daftar achievement
         const achievements = [
@@ -90,8 +94,11 @@
         
         // ========== EVENT LISTENERS ==========
         function setupEventListeners() {
-            // Tombol menu utama
-            document.getElementById('start-btn').addEventListener('click', showNameInput);
+            // PERBAIKAN: Event listener untuk tombol START GAME
+            document.getElementById('start-btn').addEventListener('click', function() {
+                showNameInput();
+            });
+            
             document.getElementById('skin-btn').addEventListener('click', showSkinSelection);
             document.getElementById('leaderboard-btn').addEventListener('click', showLeaderboard);
             document.getElementById('achievements-btn').addEventListener('click', showAchievements);
@@ -173,16 +180,59 @@
             
             // Play flap sound
             if (soundEnabled) {
-                flapSound.currentTime = 0,3;
+                flapSound.currentTime = 0.3;
                 flapSound.play().catch(e => console.log("Audio play failed:", e));
             }
         }
         
+        // ========== HITUNGAN MUNDUR ==========
+        function startCountdown() {
+            gameState = 'countdown';
+            countdownValue = 3;
+            
+            // Tampilkan layar hitungan mundur
+            countdownText.textContent = countdownValue;
+            showScreen(countdownScreen);
+            
+            // Mulai hitungan mundur
+            countdownInterval = setInterval(() => {
+                countdownValue--;
+                
+                if (countdownValue > 0) {
+                    countdownText.textContent = countdownValue;
+                    
+                    // Play sound effect
+                    if (soundEnabled) {
+                        pointSound.currentTime = 0;
+                        pointSound.play().catch(e => console.log("Countdown sound play failed:", e));
+                    }
+                } else if (countdownValue === 0) {
+                    countdownText.textContent = "GO!";
+                    
+                    // Play sound effect
+                    if (soundEnabled) {
+                        flapSound.currentTime = 0;
+                        flapSound.play().catch(e => console.log("Go sound play failed:", e));
+                    }
+                } else {
+                    // Selesai hitungan mundur
+                    clearInterval(countdownInterval);
+                    countdownScreen.classList.add('hidden');
+                    gameState = 'playing';
+                    playBgMusic();
+                }
+            }, 1000);
+        }
+        
         // ========== MANAJEMEN TAMPILAN UI ==========
         function showScreen(screenToShow) {
-            // Sembunyikan semua screen
+            // PERBAIKAN: Sembunyikan semua screen kecuali yang ingin ditampilkan
             const screens = document.querySelectorAll('.screen');
-            screens.forEach(screen => screen.classList.add('hidden'));
+            screens.forEach(screen => {
+                if (screen !== screenToShow) {
+                    screen.classList.add('hidden');
+                }
+            });
             
             // Tampilkan screen yang diminta
             screenToShow.classList.remove('hidden');
@@ -193,6 +243,12 @@
             pauseBtn.classList.add('hidden');
             showScreen(mainMenu);
             stopBgMusic();
+            
+            // Hentikan hitungan mundur jika aktif
+            if (countdownInterval) {
+                clearInterval(countdownInterval);
+                countdownInterval = null;
+            }
         }
         
         function showNameInput() {
@@ -274,7 +330,10 @@
         }
         
         function backToMainMenu() {
-            togglePause();
+            // PERBAIKAN: Pastikan state diatur dengan benar
+            if (gameState === 'paused') {
+                togglePause();
+            }
             showMainMenu();
         }
         
@@ -634,10 +693,11 @@
             playerName = document.getElementById('player-name').value || 'Player';
             hardMode = document.getElementById('difficulty-toggle').checked;
             resetGame();
-            gameState = 'playing';
             pauseBtn.classList.remove('hidden');
-            showScreen(document.getElementById('game-over').classList.add('hidden'));
-            playBgMusic();
+            gameOverScreen.classList.add('hidden');
+            
+            // Ganti langsung mulai game dengan hitungan mundur
+            startCountdown();
         }
         
         function resetGame() {
@@ -652,10 +712,11 @@
         
         function restartGame() {
             resetGame();
-            gameState = 'playing';
             pauseBtn.classList.remove('hidden');
-            showScreen(document.getElementById('game-over').classList.add('hidden'));
-            playBgMusic();
+            gameOverScreen.classList.add('hidden');
+            
+            // Gunakan hitungan mundur
+            startCountdown();
         }
         
         function gameOver() {

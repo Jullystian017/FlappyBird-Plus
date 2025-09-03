@@ -1,4 +1,4 @@
-* {
+        * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
@@ -321,4 +321,23 @@
         
         #pause-btn:hover {
             background-color: rgba(0, 0, 0, 0.7);
+        }
+        
+        /* Countdown Styles */
+        #countdown {
+            background-color: rgba(0, 0, 0, 0.7);
+            z-index: 20;
+        }
+        
+        #countdown-text {
+            font-size: 120px;
+            color: #f1c40f;
+            text-shadow: 8px 8px 0 #8b6914;
+            animation: pulse 1s infinite;
+        }
+        
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.2); }
+            100% { transform: scale(1); }
         }

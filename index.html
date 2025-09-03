@@ -2,9 +2,9 @@
 <html lang="id">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="style.css">
-    <title>Flappy Bird</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Flappy Bird</title>    
 </head>
 <body>
     <div id="game-container">
@@ -86,16 +86,20 @@
             <button id="main-menu-btn" class="btn btn-secondary">MAIN MENU</button>
         </div>
         
+        <!-- Countdown Screen -->
+        <div id="countdown" class="screen hidden">
+            <h2 id="countdown-text" class="title">3</h2>
+        </div>
+        
         <button id="pause-btn" class="hidden">❚❚</button>
         <button id="fullscreen-btn">⛶</button>
         
         <!-- Audio Elements -->
-        <audio id="flap-sound" src="myinstants.mp3" preload="auto"></audio>
-        <audio id="point-sound" src="myinstants2.mp3" preload="auto"></audio>
-        <audio id="hit-sound" src="myinstants3.mp3" preload="auto"></audio>
-        <audio id="bg-music" src="background-music.mp3" preload="auto" loop></audio>
-    </div>
-
+        <audio id="flap-sound" preload="auto"></audio>
+        <audio id="point-sound" preload="auto"></audio>
+        <audio id="hit-sound" preload="auto"></audio>
+        <audio id="bg-music" preload="auto" loop></audio>
+    </div>    
     <script src="script.js"></script>
 </body>
 </html>
