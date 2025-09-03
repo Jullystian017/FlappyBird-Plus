@@ -55,7 +55,7 @@
             height: 45,
             gravity: 0.1, 
             velocity: 0,
-            jump: -5, 
+            jump: -4, 
             rotation: 0,
             flapCounter: 0,
             currentFrame: 0
