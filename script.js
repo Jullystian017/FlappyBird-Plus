@@ -1,4 +1,4 @@
-        // ========== KONSTANTA DAN VARIABEL GLOBAL ==========
+// ========== KONSTANTA DAN VARIABEL GLOBAL ==========
         const canvas = document.getElementById('game-canvas');
         const ctx = canvas.getContext('2d');
         
@@ -29,7 +29,7 @@
         let highScore = 0;
         let gameSpeed = 0.8; // DIPERLAMBAT LAGI dari 2.0
         let gapSize = 280; // DIPERBESAR LAGI dari 250
-        let backgroundMode = 'day'; // day or night
+        let backgroundMode = 'day'; // day, afternoon, night
         let backgroundOffset = 0;
         let hardMode = false;
         let countdownValue = 3;
@@ -71,13 +71,13 @@
         
         // Waktu untuk pergantian background
         let lastBackgroundChange = Date.now();
-        let backgroundChangeInterval = 30000; // 30 detik
+        let backgroundChangeInterval = 20000; // 20 detik
         
         // ========== INISIALISASI GAME ==========
         function init() {
-            // Set ukuran canvas
-            canvas.width = 1000;
-            canvas.height = 700;
+            // Set ukuran canvas sesuai dengan container
+            canvas.width = document.getElementById('game-container').offsetWidth;
+            canvas.height = document.getElementById('game-container').offsetHeight;
             
             // Muat high score dan leaderboard dari localStorage
             loadGameData();
@@ -115,6 +115,8 @@
                     selectedBirdSkin = e.target.getAttribute('data-skin');
                 });
             });
+            document.getElementById('play-back-btn').addEventListener('click', showMainMenu);
+
             document.getElementById('skin-back-btn').addEventListener('click', showMainMenu);
             
             // Tombol leaderboard
@@ -166,6 +168,14 @@
             
             // Tombol fullscreen
             document.getElementById('fullscreen-btn').addEventListener('click', toggleFullscreen);
+            
+            // Responsif terhadap perubahan ukuran window
+            window.addEventListener('resize', function() {
+                if (gameState === 'menu') {
+                    canvas.width = document.getElementById('game-container').offsetWidth;
+                    canvas.height = document.getElementById('game-container').offsetHeight;
+                }
+            });
         }
         
         function handleGameControl() {
@@ -180,7 +190,7 @@
             
             // Play flap sound
             if (soundEnabled) {
-                flapSound.currentTime = 0.3;
+                flapSound.currentTime = 0;
                 flapSound.play().catch(e => console.log("Audio play failed:", e));
             }
         }
@@ -276,8 +286,8 @@
         
         function showGameOver() {
             gameState = 'gameover';
-            document.getElementById('final-score').textContent = `SCORE: ${score}`;
-            document.getElementById('high-score').textContent = `HIGH SCORE: ${highScore}`;
+            document.getElementById('final-score').textContent = SCORE: ${score};
+            document.getElementById('high-score').textContent = HIGH SCORE: ${highScore};
             showScreen(gameOverScreen);
             pauseBtn.classList.add('hidden');
             stopBgMusic();
@@ -325,8 +335,8 @@
         }
         
         function updatePauseMenuButtons() {
-            document.getElementById('sound-toggle-btn').textContent = `SOUND: ${soundEnabled ? 'ON' : 'OFF'}`;
-            document.getElementById('music-toggle-btn').textContent = `MUSIC: ${musicEnabled ? 'ON' : 'OFF'}`;
+            document.getElementById('sound-toggle-btn').textContent = SOUND: ${soundEnabled ? 'ON' : 'OFF'};
+            document.getElementById('music-toggle-btn').textContent = MUSIC: ${musicEnabled ? 'ON' : 'OFF'};
         }
         
         function backToMainMenu() {
@@ -431,12 +441,13 @@
                     if (!pipes[i].counted && pipes[i].x + pipes[i].width < bird.x) {
                         score++;
                         pipes[i].counted = true;
-                        playPointSound();
+                        
                         
                         // Tingkatkan kesulitan secara lebih gradual
                         if (score % 5 === 0) { 
                             gameSpeed += hardMode ? 0.2 : 0.1; 
                             gapSize = Math.max(220, gapSize - (hardMode ? 2 : 1)); 
+                            playPointSound();
                         }
                     }
                     
@@ -456,7 +467,14 @@
                 // Cek pergantian background
                 const currentTime = Date.now();
                 if (currentTime - lastBackgroundChange > backgroundChangeInterval) {
-                    backgroundMode = backgroundMode === 'day' ? 'night' : 'day';
+                    // Urutan background: day -> afternoon -> night -> day
+                    if (backgroundMode === 'day') {
+                        backgroundMode = 'afternoon';
+                    } else if (backgroundMode === 'afternoon') {
+                        backgroundMode = 'night';
+                    } else if (backgroundMode === 'night') {
+                        backgroundMode = 'day';
+                    }
                     lastBackgroundChange = currentTime;
                     
                     // Achievement night owl
@@ -504,24 +522,15 @@
         }
         
         function drawBackground() {
-            // Background sky
+            // Background berdasarkan mode
             if (backgroundMode === 'day') {
                 // Gradient sky untuk siang
                 const gradient = ctx.createLinearGradient(0, 0, 0, canvas.height);
                 gradient.addColorStop(0, '#64b3f4');
                 gradient.addColorStop(1, '#c2e59c');
                 ctx.fillStyle = gradient;
-            } else {
-                // Gradient sky untuk malam
-                const gradient = ctx.createLinearGradient(0, 0, 0, canvas.height);
-                gradient.addColorStop(0, '#0f2027');
-                gradient.addColorStop(1, '#203a43');
-                ctx.fillStyle = gradient;
-            }
-            ctx.fillRect(0, 0, canvas.width, canvas.height);
-            
-            // Draw clouds (siang) atau bintang (malam)
-            if (backgroundMode === 'day') {
+                ctx.fillRect(0, 0, canvas.width, canvas.height);
+                
                 // Draw clouds
                 ctx.fillStyle = 'rgba(255, 255, 255, 0.8)';
                 for (let i = 0; i < 6; i++) {
@@ -535,7 +544,37 @@
                 ctx.beginPath();
                 ctx.arc(850, 120, 50, 0, Math.PI * 2);
                 ctx.fill();
-            } else {
+                
+            } else if (backgroundMode === 'afternoon') {
+                // Gradient sky untuk sore
+                const gradient = ctx.createLinearGradient(0, 0, 0, canvas.height);
+                gradient.addColorStop(0, '#ff7e5f');
+                gradient.addColorStop(1, '#feb47b');
+                ctx.fillStyle = gradient;
+                ctx.fillRect(0, 0, canvas.width, canvas.height);
+                
+                // Draw clouds dengan warna oranye
+                ctx.fillStyle = 'rgba(255, 165, 0, 0.7)';
+                for (let i = 0; i < 6; i++) {
+                    const x = (i * canvas.width / 6 + backgroundOffset) % (canvas.width + 400) - 200;
+                    const y = 120 + i * 70;
+                    drawCloud(x, y, 40 + i * 12);
+                }
+                
+                // Draw matahari terbenam
+                ctx.fillStyle = '#ff8c00';
+                ctx.beginPath();
+                ctx.arc(850, 250, 45, 0, Math.PI * 2);
+                ctx.fill();
+                
+            } else if (backgroundMode === 'night') {
+                // Gradient sky untuk malam
+                const gradient = ctx.createLinearGradient(0, 0, 0, canvas.height);
+                gradient.addColorStop(0, '#0f2027');
+                gradient.addColorStop(1, '#203a43');
+                ctx.fillStyle = gradient;
+                ctx.fillRect(0, 0, canvas.width, canvas.height);
+                
                 // Draw stars
                 ctx.fillStyle = 'white';
                 for (const star of stars) {
@@ -713,13 +752,11 @@
         }
         
         function drawScore() {
+            // PERUBAHAN: Warna score diubah menjadi putih
             ctx.fillStyle = 'white';
             ctx.font = '36px "Press Start 2P"';
             ctx.textAlign = 'center';
             ctx.fillText(score.toString(), canvas.width / 2, 80);
-            ctx.strokeStyle = 'black';
-            ctx.lineWidth = 4;
-            ctx.strokeText(score.toString(), canvas.width / 2, 80);
         }
         
         function drawGameStats() {
@@ -729,8 +766,8 @@
             ctx.fillStyle = 'white';
             ctx.font = '16px "Press Start 2P"';
             ctx.textAlign = 'left';
-            ctx.fillText(`SCORE: ${score}`, 35, 50);
-            ctx.fillText(`HI-SCORE: ${highScore}`, 35, 80);
+            ctx.fillText(SCORE: ${score}, 35, 50);
+            ctx.fillText(HI-SCORE: ${highScore}, 35, 80);
             
             // Draw speed info
             ctx.fillStyle = 'rgba(0, 0, 0, 0.5)';
@@ -739,12 +776,12 @@
             ctx.fillStyle = 'white';
             ctx.font = '16px "Press Start 2P"';
             ctx.textAlign = 'left';
-            ctx.fillText(`SPEED: ${gameSpeed.toFixed(1)}`, canvas.width - 225, 50);
+            ctx.fillText(SPEED: ${gameSpeed.toFixed(1)}, canvas.width - 225, 50);
         }
         
         function drawDifficultyInfo() {
-            ctx.fillStyle = '#f39c12';
-            ctx.font = '20px "Press Start 2P"';
+            ctx.fillStyle = 'white';
+            ctx.font = '24px "Press Start 2P"';
             ctx.textAlign = 'center';
             ctx.fillText('LEVEL UP!', canvas.width / 2, 120);
         }
@@ -812,7 +849,7 @@
                 const item = sortedLeaderboard[i];
                 const li = document.createElement('li');
                 li.className = 'leaderboard-item';
-                li.innerHTML = `<span>${i + 1}. ${item.name}</span><span>${item.score}</span>`;
+                li.innerHTML = <span>${i + 1}. ${item.name}</span><span>${item.score}</span>;
                 leaderboardList.appendChild(li);
             }
             
@@ -854,7 +891,7 @@
                 icon.innerHTML = achievement.achieved ? '✓' : '?';
                 
                 const text = document.createElement('div');
-                text.innerHTML = `<strong>${achievement.name}</strong><br><small>${achievement.desc}</small>`;
+                text.innerHTML = <strong>${achievement.name}</strong><br><small>${achievement.desc}</small>;
                 
                 div.appendChild(icon);
                 div.appendChild(text);
@@ -894,7 +931,7 @@
         function showAchievementNotification(achievementName) {
             const notification = document.createElement('div');
             notification.className = 'notification';
-            notification.textContent = `Achievement Unlocked: ${achievementName}!`;
+            notification.textContent = Achievement Unlocked: ${achievementName}!;
             document.getElementById('game-container').appendChild(notification);
             
             // Hapus notifikasi setelah animasi selesai
@@ -907,7 +944,7 @@
         function toggleFullscreen() {
             if (!document.fullscreenElement) {
                 document.documentElement.requestFullscreen().catch(err => {
-                    console.error(`Error attempting to enable full-screen mode: ${err.message}`);
+                    console.error(Error attempting to enable full-screen mode: ${err.message});
                 });
             } else {
                 if (document.exitFullscreen) {
@@ -1000,7 +1037,7 @@
             }
             if (newlyUnlocked.length > 0) {
                 saveUnlockedSkins();
-                alert(`🎉 Skin baru terbuka: ${newlyUnlocked.join(", ")}`);
+                alert(🎉 Skin baru terbuka: ${newlyUnlocked.join(", ")});
             }
         }
 
