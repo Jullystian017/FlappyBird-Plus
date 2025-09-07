@@ -1,4 +1,4 @@
-// ========== KONSTANTA DAN VARIABEL GLOBAL ==========
+ // ========== KONSTANTA DAN VARIABEL GLOBAL ==========
         const canvas = document.getElementById('game-canvas');
         const ctx = canvas.getContext('2d');
         
@@ -29,7 +29,10 @@
         let highScore = 0;
         let gameSpeed = 0.8; // DIPERLAMBAT LAGI dari 2.0
         let gapSize = 280; // DIPERBESAR LAGI dari 250
-        let backgroundMode = 'day'; // day, afternoon, night
+    // Urutan background: day, afternoon, night
+    const backgroundOrder = ['day', 'afternoon', 'night'];
+    let backgroundIndex = 0;
+    let backgroundMode = backgroundOrder[backgroundIndex];
         let backgroundOffset = 0;
         let hardMode = false;
         let countdownValue = 3;
@@ -286,8 +289,8 @@
         
         function showGameOver() {
             gameState = 'gameover';
-            document.getElementById('final-score').textContent = SCORE: ${score};
-            document.getElementById('high-score').textContent = HIGH SCORE: ${highScore};
+            document.getElementById('final-score').textContent = `SCORE: ${score}`;
+            document.getElementById('high-score').textContent = `HIGH SCORE: ${highScore}`;
             showScreen(gameOverScreen);
             pauseBtn.classList.add('hidden');
             stopBgMusic();
@@ -335,8 +338,8 @@
         }
         
         function updatePauseMenuButtons() {
-            document.getElementById('sound-toggle-btn').textContent = SOUND: ${soundEnabled ? 'ON' : 'OFF'};
-            document.getElementById('music-toggle-btn').textContent = MUSIC: ${musicEnabled ? 'ON' : 'OFF'};
+            document.getElementById('sound-toggle-btn').textContent = `SOUND: ${soundEnabled ? 'ON' : 'OFF'}`;
+            document.getElementById('music-toggle-btn').textContent = `MUSIC: ${musicEnabled ? 'ON' : 'OFF'}`;
         }
         
         function backToMainMenu() {
@@ -467,16 +470,10 @@
                 // Cek pergantian background
                 const currentTime = Date.now();
                 if (currentTime - lastBackgroundChange > backgroundChangeInterval) {
-                    // Urutan background: day -> afternoon -> night -> day
-                    if (backgroundMode === 'day') {
-                        backgroundMode = 'afternoon';
-                    } else if (backgroundMode === 'afternoon') {
-                        backgroundMode = 'night';
-                    } else if (backgroundMode === 'night') {
-                        backgroundMode = 'day';
-                    }
+                    // Ganti background ke urutan berikutnya
+                    backgroundIndex = (backgroundIndex + 1) % backgroundOrder.length;
+                    backgroundMode = backgroundOrder[backgroundIndex];
                     lastBackgroundChange = currentTime;
-                    
                     // Achievement night owl
                     if (backgroundMode === 'night' && !achievements[2].achieved) {
                         achievements[2].achieved = true;
@@ -766,8 +763,8 @@
             ctx.fillStyle = 'white';
             ctx.font = '16px "Press Start 2P"';
             ctx.textAlign = 'left';
-            ctx.fillText(SCORE: ${score}, 35, 50);
-            ctx.fillText(HI-SCORE: ${highScore}, 35, 80);
+            ctx.fillText(`SCORE: ${score}`, 35, 50);
+            ctx.fillText(`HI-SCORE: ${highScore}`, 35, 80);
             
             // Draw speed info
             ctx.fillStyle = 'rgba(0, 0, 0, 0.5)';
@@ -776,7 +773,7 @@
             ctx.fillStyle = 'white';
             ctx.font = '16px "Press Start 2P"';
             ctx.textAlign = 'left';
-            ctx.fillText(SPEED: ${gameSpeed.toFixed(1)}, canvas.width - 225, 50);
+            ctx.fillText(`SPEED: ${gameSpeed.toFixed(1)}`, canvas.width - 225, 50);
         }
         
         function drawDifficultyInfo() {
@@ -790,10 +787,13 @@
         function startGame() {
             playerName = document.getElementById('player-name').value || 'Player';
             hardMode = document.getElementById('difficulty-toggle').checked;
+            // Reset background ke siang (day) setiap mulai game
+            backgroundIndex = 0;
+            backgroundMode = backgroundOrder[backgroundIndex];
+            lastBackgroundChange = Date.now();
             resetGame();
             pauseBtn.classList.remove('hidden');
             gameOverScreen.classList.add('hidden');
-            
             // Ganti langsung mulai game dengan hitungan mundur
             startCountdown();
         }
@@ -849,7 +849,7 @@
                 const item = sortedLeaderboard[i];
                 const li = document.createElement('li');
                 li.className = 'leaderboard-item';
-                li.innerHTML = <span>${i + 1}. ${item.name}</span><span>${item.score}</span>;
+                li.innerHTML = `<span>${i + 1}. ${item.name}</span><span>${item.score}</span>`;
                 leaderboardList.appendChild(li);
             }
             
@@ -891,7 +891,7 @@
                 icon.innerHTML = achievement.achieved ? '✓' : '?';
                 
                 const text = document.createElement('div');
-                text.innerHTML = <strong>${achievement.name}</strong><br><small>${achievement.desc}</small>;
+                text.innerHTML = `<strong>${achievement.name}</strong><br><small>${achievement.desc}</small>`;
                 
                 div.appendChild(icon);
                 div.appendChild(text);
@@ -931,7 +931,7 @@
         function showAchievementNotification(achievementName) {
             const notification = document.createElement('div');
             notification.className = 'notification';
-            notification.textContent = Achievement Unlocked: ${achievementName}!;
+            notification.textContent = `Achievement Unlocked: ${achievementName}!`;
             document.getElementById('game-container').appendChild(notification);
             
             // Hapus notifikasi setelah animasi selesai
@@ -944,7 +944,7 @@
         function toggleFullscreen() {
             if (!document.fullscreenElement) {
                 document.documentElement.requestFullscreen().catch(err => {
-                    console.error(Error attempting to enable full-screen mode: ${err.message});
+                    console.error(`Error attempting to enable full-screen mode: ${err.message}`);
                 });
             } else {
                 if (document.exitFullscreen) {
@@ -1009,10 +1009,10 @@
 
         // Syarat skor untuk skin eksklusif
         const SKIN_UNLOCK_REQUIREMENTS = {
-            gold: 50,
-            rainbow: 70,
-            obsidian: 100,
-            legendary: 150
+            gold: 20,
+            rainbow: 20,
+            obsidian: 20,
+            legendary: 20
         };
 
         // Muat skin dari localStorage
@@ -1037,7 +1037,7 @@
             }
             if (newlyUnlocked.length > 0) {
                 saveUnlockedSkins();
-                alert(🎉 Skin baru terbuka: ${newlyUnlocked.join(", ")});
+                alert(`🎉 Skin baru terbuka: ${newlyUnlocked.join(", ")}`);
             }
         }
 
