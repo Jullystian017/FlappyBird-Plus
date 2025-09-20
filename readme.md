@@ -3,7 +3,7 @@
 Versi modifikasi dari game klasik **Flappy Bird**, dibuat dengan HTML, CSS, dan JavaScript.  
 Game ini dilengkapi dengan berbagai fitur baru seperti leaderboard, sistem pencapaian (achievement), pilihan skin burung, dan mode sulit (hard mode).  
 
----
+
 
 ## ✨ Fitur
 - 🏆 **Leaderboard** – catat skor tertinggi dan tampilkan ranking pemain  
@@ -34,7 +34,10 @@ Game ini dilengkapi dengan berbagai fitur baru seperti leaderboard, sistem penca
 
 
 ## 📸 Tangkapan Layar
-> *(Tambahkan screenshot gameplay di sini)*  
-Contoh:  
+> 
+Tampilan Menu:  
 ![Flappy Bird Custom Demo](ss1.png)
+
+Tampilan InGame:
+![Flappy Bird Custom Demo](ss2.png)
 
