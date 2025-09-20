@@ -446,7 +446,7 @@
                         pipes[i].counted = true;
                         
                         
-                        // Tingkatkan kesulitan secara lebih gradual
+                        
                         if (score % 5 === 0) { 
                             gameSpeed += hardMode ? 0.2 : 0.1; 
                             gapSize = Math.max(220, gapSize - (hardMode ? 2 : 1)); 
@@ -868,7 +868,7 @@
                 leaderboard.push({ name: playerName, score: score });
                 
                 // Urutkan dan pertahankan hanya 5 teratas
-                leaderboard.sort((a, b) => b.score - a.score);
+                leaderboard.sort((a, b) => b.score - a.score);      
                 if (leaderboard.length > 5) {
                     leaderboard = leaderboard.slice(0, 5);
                 }
@@ -1010,9 +1010,9 @@
         // Syarat skor untuk skin eksklusif
         const SKIN_UNLOCK_REQUIREMENTS = {
             gold: 20,
-            rainbow: 20,
-            obsidian: 20,
-            legendary: 20
+            rainbow: 30,
+            obsidian: 40,
+            legendary: 50
         };
 
         // Muat skin dari localStorage
