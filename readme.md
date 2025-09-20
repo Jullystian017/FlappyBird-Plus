@@ -39,5 +39,5 @@ Tampilan Menu:
 ![Flappy Bird Custom Demo](ss1.png)
 
 Tampilan InGame:
-![Flappy Bird Custom Demo](ss2.png)
+![Flappy Bird Custom Demo](ss.png)
 
